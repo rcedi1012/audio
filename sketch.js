@@ -3,6 +3,7 @@ let globeScale; // scale factor
 
 let mic;
 let volSense = 200;
+let volSenseSlider;
 let vol = 1;
 let normVol = 1;
 
@@ -15,6 +16,8 @@ function setup() {
     colorMode(HSB);
 
     getAudioContext().suspend();
+
+    volSenseSlider = createSlider(0, 200, 100);
 
 }
 
