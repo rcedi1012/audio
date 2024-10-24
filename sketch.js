@@ -1,4 +1,4 @@
-let ratio = 1.3333; // 4:3 aspect ratio
+let ratio = 1.6; // 4:3 aspect ratio
 let globeScale; // scale factor
 
 let mic;
@@ -13,6 +13,10 @@ let startAudio = false;
 let fft;
 let spectrum;
 let waveform;
+
+//let worm = new Worm(offset, normVol);
+//let offset = globeScale * 0.1;
+
 function setup() {
 
     createCanvas(window.innerWidth, window.innerWidth / ratio);
@@ -22,11 +26,10 @@ function setup() {
     getAudioContext().suspend();
 
     volSenseSlider = createSlider(0, 200, volSense, sliderStep);
-
 }
 
 function draw() {
-    background(200, 100, 100, 0.1);
+    background(152, 100, 6);
     if (startAudio) {
         vol = mic.getLevel();
         spectrum = fft.analyze();
@@ -35,11 +38,10 @@ function draw() {
         normVol = vol * volSense;
         console.log(vol);
 
-        waveForm();
-        spectrumViz();
+        //waveForm();
+        wormViz();
 
     }
-    smileyFace();
 }
 
 function mousePressed() {
@@ -58,7 +60,7 @@ function mousePressed() {
 
 }
 
-function waveForm() {
+/* function waveForm() {
     if (startAudio) {
         noFill();
         beginShape();
@@ -71,22 +73,34 @@ function waveForm() {
         }
         endShape();
     }
-}
+} */
 
-function spectrumViz() {
+function wormViz() {
+    let wormDiameter = globeScale * 0.2;
+    let offsetX = globeScale * 0.1;;
+    //let wormY = wormDiameter * 4.4;
+
     if (startAudio) {
         for (let i = 0; i < spectrum.length; i++) {
-            
+            stroke(0);
+            strokeWeight(globeScale * 0.006);
+            fill(0,0,100);
+
             let rectX = map(i, 0, spectrum.length, 0, width);
             let rectY = height;
             let rectW = globeScale * 0.05;
-            let rectH = -map(spectrum[i], 0, 255, 0, height);
-            noStroke();
-            fill(spectrum[i], 100, 100, 0.1);
-            rect(rectX, rectY, rectW, rectH);
+            let rectH = map(spectrum[i], 0, 255, 0, height);
 
-            let rectX2 = width - rectX - rectW;
-            rect(rectX2, rectY, rectW, rectH);
+            ellipse((width * 0.015) + offsetX, rectH, wormDiameter);
+            //currentHeroY = lerp(currentHeroY, targetHeroY, 0.2);
+            //ellipse(rectX, rectH, rectW);
+            offsetX += globeScale * 0.2;
+            let rectH2 = map(spectrum[i], 0, 255, height, 0);
+            ellipse((width * 0.015) + offsetX, rectH2, wormDiameter);
         }
+
+    
+
+        
     }
 }
