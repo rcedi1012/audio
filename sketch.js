@@ -50,7 +50,7 @@ function mousePressed() {
 
     if (!startAudio) {
         mic = new p5.AudioIn();
-        fft = new p5.FFT();
+        fft = new p5.FFT(1, 64);
         fft.setInput(mic);
 
         mic.start();
@@ -76,8 +76,8 @@ function mousePressed() {
 } */
 
 function wormViz() {
-    let wormDiameter = globeScale * 0.2;
-    let offsetX = globeScale * 0.1;;
+    let wormDiameter = globeScale * 0.01;
+    let offsetX = 0;
     //let wormY = wormDiameter * 4.4;
 
     if (startAudio) {
@@ -85,19 +85,43 @@ function wormViz() {
             stroke(0);
             strokeWeight(globeScale * 0.006);
             fill(0,0,100);
+            
 
             let rectX = map(i, 0, spectrum.length, 0, width);
             let rectY = height;
-            let rectW = globeScale * 0.05;
-            let rectH = map(spectrum[i], 0, 255, 0, height);
+            let rectW = globeScale * 0.5;
+            let targetRectH = map(spectrum[i], 0, 255, 0, height);
+            let rectH = lerp(targetRectH, globeScale * 0.1, 0.02);
 
             ellipse((width * 0.015) + offsetX, rectH, wormDiameter);
             //currentHeroY = lerp(currentHeroY, targetHeroY, 0.2);
             //ellipse(rectX, rectH, rectW);
-            offsetX += globeScale * 0.2;
-            let rectH2 = map(spectrum[i], 0, 255, height, 0);
-            ellipse((width * 0.015) + offsetX, rectH2, wormDiameter);
+            offsetX += globeScale * 0.002;
+            //let rectH2 = map(spectrum[i], 0, 255, height, 0);
+            //ellipse((width * 0.015) + offsetX, rectH2, wormDiameter);
         }
+
+
+        noFill();
+        beginShape();
+        strokeWeight(globeScale * 0.1);
+        let colors = ['172, 83, 44','13, 92, 95','260, 48, 36'];
+        for (let i = 0; i < waveform.length; i++) {
+          if (i % 2 == 0) {
+            stroke(colors[1]); 
+          }
+          else if(i % 2 == 1) {
+            stroke(colors[2]);
+          }
+          else if (i % 2 == 2) {
+            stroke(colors[3]);
+          }
+            
+          let x = map(i, 0, waveform.length, globeScale * 0.04, width);
+          let y = map( waveform[i], -1, 1, 0, height);
+          vertex(x,y);
+        }
+        endShape();
 
     
 
