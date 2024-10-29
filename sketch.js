@@ -183,53 +183,35 @@ function mousePressed() {
 } */
 
 function wormViz() {
-    let wormDiameter = globeScale * 0.01;
-    let offsetX = 0;
-    //let wormY = wormDiameter * 4.4;
 
     if (startAudio) {
-        for (let i = 0; i < spectrum.length; i++) {
-            stroke(0);
-            strokeWeight(globeScale * 0.006);
-            fill(0,0,100);
-            
+        let h = [172, 13, 260];
+        let s = [83, 92, 48];
+        let b = [44, 95, 36];
+        noStroke();
+        //beginShape();
+        //strokeWeight(globeScale * 0.1);
 
-            let rectX = map(i, 0, spectrum.length, 0, width);
-            let rectY = height;
-            let rectW = globeScale * 0.5;
-            let targetRectH = map(spectrum[i], 0, 255, 0, height);
-            let rectH = lerp(targetRectH, globeScale * 0.1, 0.02);
-
-            ellipse((width * 0.015) + offsetX, rectH, wormDiameter);
-            //currentHeroY = lerp(currentHeroY, targetHeroY, 0.2);
-            //ellipse(rectX, rectH, rectW);
-            offsetX += globeScale * 0.002;
-            //let rectH2 = map(spectrum[i], 0, 255, height, 0);
-            //ellipse((width * 0.015) + offsetX, rectH2, wormDiameter);
-        }
-
-        noFill();
-        beginShape();
-        strokeWeight(globeScale * 0.1);
-        let colors = ['172, 83, 44','13, 92, 95','260, 48, 36'];
         for (let i = 0; i < waveform.length; i++) {
-          if (i % 2 == 0) {
-          }
-          else if(i % 2 == 1) {
-            stroke(colors[2]);
-          }
-          else if (i % 2 == 2) {
-            stroke(colors[3]);
-          }
+            if (round(i % 3) == 0) {
+                fill(h[1],s[1],b[1]);
+            }
+            if (round(i % 3) == 1) {
+                fill(h[2],s[2],b[2]);
+            }
+            if (round(i % 3) == 2) {
+                fill(h[3],s[3],b[3]);
+            }
           let x = map(i, 0, waveform.length, globeScale * 0.04, width);
           let y = map( waveform[i], -1, 1, 0, height);
-          vertex(x,y);
+          ellipse(x, y, globeScale * 0.1);
         }
-        endShape();
+        //endShape();
 
     }
 }
 
+//Chisara spectrum
 function spectrumF(){
     if(startAudio){
         for(let i = 0; i < spectrum.length; i++){
@@ -249,3 +231,6 @@ function spectrumF(){
         }
     }
 }
+
+//lerp color for worm line
+// or circles
