@@ -206,7 +206,26 @@ function wormViz() {
             ellipse((width * 0.015) + offsetX, rectH2, wormDiameter);
         }
 
+        noFill();
+        beginShape();
+        strokeWeight(globeScale * 0.1);
+        let colors = ['172, 83, 44','13, 92, 95','260, 48, 36'];
+        for (let i = 0; i < waveform.length; i++) {
+          if (i % 2 == 0) {
+            stroke(colors[1]);
+          }
+          else if(i % 2 == 1) {
+            stroke(colors[2]);
+          }
+          else if (i % 2 == 2) {
+            stroke(colors[3]);
+          }
 
+          let x = map(i, 0, waveform.length, globeScale * 0.04, width);
+          let y = map( waveform[i], -1, 1, 0, height);
+          vertex(x,y);
+        }
+        endShape();
 
 
     }
