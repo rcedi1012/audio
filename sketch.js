@@ -49,7 +49,7 @@ let showWormViz = true;
 let tempMouseImage;
 
 function preload() {
-    tempMouseImage = loadImage('Images/TempMouse.png');
+    tempMouseImage = loadImage('TempMouse.png');
 }
 
 
