@@ -185,7 +185,7 @@ let headX = globeScale * 0.05;
 let baseHeadY = globeScale * 0.425; // baseline position for head image
 
 // Calculate the new headY position based on the beat
-let beatOffset = map(waveform[0], -1, 1, -globeScale * 0.07, globeScale * 0.07); // scale the offset based on the beat
+let beatOffset = map(waveform[0], -1, 1, -globeScale * 0.1, globeScale * 0.1); // scale the offset based on the beat
 let headY = baseHeadY + beatOffset;
 
 // Draw the head image with the updated Y position
