@@ -41,7 +41,7 @@ function wormViz() {
 
     image(head, headX, headY, globeScale * 0.15, globeScale * 0.15);
 
-    if (millis() - startTime >= 6000) {
+    if (millis() - startTimeW >= 6000) {
         console.log("6 seconds have passed");
         let randFace = floor(random(1, 6));
         sf1 = randFace === 1;
@@ -49,7 +49,7 @@ function wormViz() {
         sf3 = randFace === 3;
         sf4 = randFace === 4;
         sf5 = randFace === 5;
-        startTime = millis();
+        startTimeW = millis();
     }
     if (sf1) image(f1, headX + globeScale * 0.01, headY + globeScale * 0.01, globeScale * 0.12, globeScale * 0.12);
     else if (sf2) image(f2, headX + globeScale * 0.01, headY + globeScale * 0.01, globeScale * 0.12, globeScale * 0.12);

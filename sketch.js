@@ -46,6 +46,7 @@ let colorOrder = [];
 
 // Time Scenes
 let startTime = 0; // Variable to store the start time of the sketch
+let startTimeW = 0; // Variable to store the start time of the sketch
 let showWormViz = true;
 
 //Images
