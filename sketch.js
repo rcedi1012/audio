@@ -21,6 +21,9 @@ let waveform;
 let prevX = [];
 let prevY = [];
 
+let bprevX = [];
+let bprevY = [];
+
 // BPM variables
 let bassEnergy;
 let lastBeatTime = 0;
@@ -127,6 +130,8 @@ function draw() {
     //waveForm();
     if (showWormViz) {
       wormViz();
+      bodyviz(-globeScale * 2, globeScale * 3);
+      bodyviz(-globeScale * 2, -globeScale * 3);
     } else {
       mouseHero();
     }

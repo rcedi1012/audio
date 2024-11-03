@@ -77,3 +77,32 @@ function antennaMove() {
     pop();
 }
 
+function bodyviz(xOffset, yOffset) { // Add xOffset and yOffset as parameters
+    if (startAudio) {
+        let h = [172, 13, 260];
+        let s = [83, 92, 48];
+        let b = [44, 95, 36];
+        noStroke();
+    
+        for (let i = 0; i < waveform.length; i++) {
+            let index = i % 3;
+            fill(h[index], s[index], b[index]);
+    
+            // Map values to create target positions and add xOffset, yOffset for positioning
+            let btargetX = map(i, 0, waveform.length, 0, width * 1.5) + xOffset;
+            let btargetY = map(waveform[i], -1, 1, 0, globeScale) + yOffset;
+
+            // Interpolate positions
+            let bx = lerp(prevX[i] || btargetX, btargetX, 0.1);
+            let by = lerp(prevY[i] || btargetY, btargetY, 0.1);
+    
+            // Store current positions for the next frame
+            bprevX[i] = bx;
+            bprevY[i] = by;
+
+            // Draw the ellipse
+            ellipse(bx, by, globeScale * 0.1);
+        }
+    }
+}
+
