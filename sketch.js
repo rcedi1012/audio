@@ -48,6 +48,7 @@ let showWormViz = true;
 //Images
 let tempMouseImage;
 let antenna, f1, f2, f3, f4, f5, head;
+let sf1, sf2, sf3, sf4, sf5;
 
 function preload() {
   tempMouseImage = loadImage("TempMouse.png");
@@ -96,6 +97,12 @@ function setup() {
   for (let i = 0; i < 10; i++) {
     colorOrder.push(colors[i % colors.length]);
   }
+
+  sf1 = true;
+  sf2 = false;
+  sf3 = false;
+  sf4= false;
+  sf5 = false;
 }
 
 function draw() {
