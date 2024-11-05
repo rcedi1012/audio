@@ -140,15 +140,15 @@ function draw() {
       startTime = millis();
     }
 
-    mouseHero();
+    //mouseHero();
     //waveForm();
-    /* if (showWormViz) {
+     if (showWormViz) {
       wormViz();
       bodyviz(-globeScale * 2, globeScale * 3);
       bodyviz(-globeScale * 2, -globeScale * 3);
     } else {
       mouseHero();
-    } */
+    } 
   }
 }
 
