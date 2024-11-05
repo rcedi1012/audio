@@ -39,6 +39,11 @@ let targetHeroY = 0; // Variable to store the target y-position of the hero rect
 let lastPosition = -1; // Variable to store the last position (0: top, 1: middle, 2: bottom)
 let laserVisible = false; // Variable to track the visibility of the laser rectangle
 let laserTimer = 0; // Timer to hide the laser rectangle
+let lastImageChangeTimeMouse = 0; // Variable to keep track of the last image change time
+let currentImage = 0; // Variable to store the current image index  (0, 1, 2)
+let show1;
+let show2;
+let show3;
 let prevHeights = [];
 // Initialize colors
 let colors = [];
@@ -51,11 +56,16 @@ let showWormViz = true;
 
 //Images
 let tempMouseImage;
+let Mouse1, Mouse2, Mouse3, Laser;
 let antenna, f1, f2, f3, f4, f5, head;
 let sf1, sf2, sf3, sf4, sf5;
 
 function preload() {
-  tempMouseImage = loadImage("TempMouse.png");
+  //tempMouseImage = loadImage("TempMouse.png");
+  Mouse1 = loadImage("Mouse1.gif");
+  Mouse2 = loadImage("Mouse2.gif");
+  Mouse3 = loadImage("Mouse3.gif");
+  Laser = loadImage("Laser.png");
   antenna = loadImage("Antenna.png");
   f1 = loadImage("F1.png");
   f2 = loadImage("F2.png");
@@ -107,6 +117,9 @@ function setup() {
   sf3 = false;
   sf4= false;
   sf5 = false;
+
+  lastImageChangeTimeMouse = millis(); // Reset the last image change time
+
 }
 
 function draw() {
@@ -127,15 +140,15 @@ function draw() {
       startTime = millis();
     }
 
-    //mouseHero();
+    mouseHero();
     //waveForm();
-    if (showWormViz) {
+    /* if (showWormViz) {
       wormViz();
       bodyviz(-globeScale * 2, globeScale * 3);
       bodyviz(-globeScale * 2, -globeScale * 3);
     } else {
       mouseHero();
-    }
+    } */
   }
 }
 
@@ -173,6 +186,13 @@ function mouseHero() {
   fft.analyze();
   bassEnergy = fft.getEnergy("bass"); // Low frequency energy
   freqThreshold = volSenseSlider.value(); // Set the threshold for bass energy
+  let newPosition = 0;
+  let topPos = 0 + 40;
+  let midPos = height / 2;
+  let bottomPos = height -  50;
+  /* image(Laser, 0, bottomPos + 20, width, 50);
+  image(Laser, 0, midPos, width, 50);
+  image(Laser, 0, topPos - 20, width, 50); */
 
   // Check for a beat (if bass energy exceeds a threshold)
   if (
@@ -181,12 +201,9 @@ function mouseHero() {
   ) {
     lastBeatTime = millis();
 
-    let topPos = 0 + 40;
-    let midPos = height / 2 - 40;
-    let bottomPos = height - 140;
     let laserPos;
-    let newPosition = 0;
     let prevPos = -1;
+
     do {
       newPosition = floor(random(3)); // Randomly choose 0 (top), 1 (middle), or 2 (bottom)
     } while (newPosition === lastPosition); // Ensure it's not the same as the last position
@@ -200,30 +217,31 @@ function mouseHero() {
       laserTimer = 0;
       if (prevPos !== 2) {
         laserVisible = true;
-        laserY = midPos + 30;
+        laserY = midPos; // + 30
       }
     } else if (newPosition === 1) {
       targetHeroY = midPos; // Middle (centered vertically)
       if (laserPos === 0) {
         laserTimer = 0;
         laserVisible = true;
-        laserY = topPos + 30;
+        laserY = topPos - 20; // + 30
       } else if (laserPos === 1) {
         laserTimer = 0;
         laserVisible = true;
-        laserY = bottomPos + 30;
+        laserY = bottomPos + 20; // + 30
       }
     } else if (newPosition === 2) {
       targetHeroY = bottomPos; // Bottom
       laserTimer = 0;
       if (prevPos !== 0) {
         laserVisible = true;
-        laserY = midPos + 30;
+        laserY = midPos; // + 30
       }
     }
 
     // Show the laser rectangle and reset the timer
     laserTimer = millis();
+
   }
 
   stroke(0, 0, 0);
@@ -233,22 +251,17 @@ function mouseHero() {
   green = color(172, 83, 44);
   black = color(152, 100, 6);
   purple = color(260, 48, 36);
-  //fill(red)
-  //rect(0, 0, width / 6, height)
-  //rect(width / 6, 0 , width / 6, height)
-  //rect((width / 6) * 2, 0, width / 6, height)
-  //rect(width - width / 6, 0, width / 6, height)
 
   let numSkyscrapers = 10; // Number of skyscrapers
   let skyscraperWidth = width / numSkyscrapers; // Width of each skyscraper
 
   for (let i = 0; i < numSkyscrapers; i++) {
-    let scaledWaveform = (waveform[i] * volSense) / 2; // Scale the waveform data by volSense
-    let targetHeight = map(scaledWaveform, -1, 1, height / 4, height); // More varied height based on waveform
+    let scaledWaveform = (waveform[i] * volSense) / 4; // Scale the waveform data by volSense
+    let targetHeight = map(scaledWaveform, -1, 1, 0, height); // Adjust height mapping to ensure skyscrapers reach the bottom
     let prevHeight = prevHeights[i] || targetHeight; // Use previous height or target height if not available
-    let skyscraperHeight = lerp(prevHeight, targetHeight, 0.05); // Interpolate the height
+    let skyscraperHeight = lerp(prevHeight, targetHeight, 0.1); // Interpolate the height
 
-    fill(colorOrder[i]); // Set the fill color
+    fill(colorOrder[i % colorOrder.length]); // Set the fill color
     rect(
       i * skyscraperWidth,
       height - skyscraperHeight,
@@ -257,44 +270,42 @@ function mouseHero() {
     );
 
     prevHeights[i] = skyscraperHeight; // Store the current height for the next frame
-  }
-
-  // Cycle colors
-  /*  if (laserVisible) {
-        lastBeatTime = millis();
-        let firstColor = colorOrder.shift();
-        colorOrder.push(firstColor);
-    } */
-
-  /* fill(0, 0, 10);
-        rect(0, 0, width / 2, height / 3); // Top-left panel
-        rect(width / 2, 0, width / 2, height / 3); // Top-right panel
-
-        fill(0, 0, 20);
-        rect(0, height / 3, width / 3, height / 3); // Middle-left panel
-        rect(width / 3, height / 3, width / 3, height / 3); // Middle-center panel
-        rect(2 * width / 3, height / 3, width / 3, height / 3); // Middle-right panel
-
-        fill(0, 0, 30);
-        rect(0, 2 * height / 3, width / 2, height / 3); // Bottom-left panel
-        rect(width / 2, 2 * height / 3, width / 2, height / 3); // Bottom-right panel
- */
+}
 
   // Smoothly interpolate the current y-position towards the target y-position
-  currentHeroY = lerp(currentHeroY, targetHeroY, 0.15);
+  currentHeroY = lerp(currentHeroY, targetHeroY, 0.2);
 
   strokeWeight(5);
   fill(255); // Set fill color to white for the hero rectangle
   //rect(width / 2.12, currentHeroY, 80, 80); // temp hero rectangle
-  image(tempMouseImage, width / 2.5, currentHeroY, 250, 100);
 
   if (laserVisible) {
     fill(13, 92, 95);
-    rect(0, laserY, width, 30); // laser rectangle
+    image(Laser, 0, laserY, width, 50);
+    //rect(0, laserY, width, 30); // laser rectangle
   }
   if (millis() - laserTimer > 50) {
     laserVisible = false; // Hide the laser rectangle after
   }
+
+  // Check if 5 seconds have passed
+    if (millis() - lastImageChangeTimeMouse >= 5000) {
+        // Change the image to the next one in the sequence
+        currentImage = (currentImage + 1) % 3;  // Cycle through 0, 1, 2
+        lastImageChangeTimeMouse = millis();  // Reset the timer
+      }
+
+      // Display the current image
+      if (currentImage == 0) {
+        image(Mouse1, width / 3, currentHeroY, 400, 300);
+      } else if (currentImage == 1) {
+        image(Mouse2, width / 3, currentHeroY, 400, 300);
+      } else if (currentImage == 2) {
+        image(Mouse3, width / 3, currentHeroY, 400, 300);
+      }
+
+  //image(tempMouseImage, width / 2.5, currentHeroY, 250, 100);
+
 }
 
 //Chisara spectrum
