@@ -21,6 +21,9 @@ let waveform;
 let prevX = [];
 let prevY = [];
 
+let bprevX = [];
+let bprevY = [];
+
 // BPM variables
 let bassEnergy;
 let lastBeatTime = 0;
@@ -40,6 +43,7 @@ let prevHeights = [];
 // Initialize colors
 let colors = [];
 let colorOrder = [];
+<<<<<<< HEAD
 
 // Time Scenes
 let startTime = 0; // Variable to store the start time of the sketch
@@ -51,24 +55,50 @@ let tempMouseImage;
 function preload() {
     tempMouseImage = loadImage('Images/TempMouseHero.png');
 }
+=======
+>>>>>>> 0a5beb1c72417b484b0aac6dd3d3fa30e15d2de5
 
+// Time Scenes
+let startTime = 0; // Variable to store the start time of the sketch
+let startTimeW = 0; // Variable to store the start time of the sketch
+let showWormViz = true;
+
+//Images
+let tempMouseImage;
+let antenna, f1, f2, f3, f4, f5, head;
+let sf1, sf2, sf3, sf4, sf5;
+
+function preload() {
+  tempMouseImage = loadImage("TempMouse.png");
+  antenna = loadImage("Antenna.png");
+  f1 = loadImage("F1.png");
+  f2 = loadImage("F2.png");
+  f3 = loadImage("F3.png");
+  f4 = loadImage("F4.png");
+  f5 = loadImage("F5.png");
+  head = loadImage("Head.png");
+
+}
 
 function setup() {
+  createCanvas(window.innerWidth, window.innerWidth / ratio);
+  globeScale = min(width, height);
+  colorMode(HSB);
 
-    createCanvas(window.innerWidth, window.innerWidth / ratio);
-    globeScale = min(width, height);
-    colorMode(HSB);
+  height = window.innerHeight;
+  width = window.innerWidth;
 
-    height = window.innerHeight;
-    width = window.innerWidth;
+  getAudioContext().suspend();
 
-    getAudioContext().suspend();
+  fft = new p5.FFT();
+  mic = new p5.AudioIn();
+  mic.start();
+  fft.setInput(mic);
 
-    fft = new p5.FFT();
-    mic = new p5.AudioIn();
-    mic.start();
-    fft.setInput(mic);
+  volSenseSlider = createSlider(0, 200, volSense, sliderStep);
+  volSenseSlider.position(10, 10); // Position the slider in the top-left corner
 
+<<<<<<< HEAD
     volSenseSlider = createSlider(0, 200, volSense, sliderStep);
     volSenseSlider.position(10, 10); // Position the slider in the top-left corner
 
@@ -118,14 +148,75 @@ function draw() {
             mouseHero();
         }
 
+=======
+  // Initialize prevHeights array with zeros
+  for (let i = 0; i < 10; i++) {
+    prevHeights[i] = 0;
+  }
+  // Initialize colors
+  colors = [
+    //color(13, 92, 95),   // red
+    color(52, 73, 88), // yellow
+    color(172, 83, 44), // green
+    //color(152, 100, 6),  // black
+    color(260, 48, 36), // purple
+  ];
 
+  // Initialize color order
+  for (let i = 0; i < 10; i++) {
+    colorOrder.push(colors[i % colors.length]);
+  }
+
+  sf1 = true;
+  sf2 = false;
+  sf3 = false;
+  sf4= false;
+  sf5 = false;
+}
+
+function draw() {
+  background(152, 100, 6);
+  if (startAudio) {
+    vol = mic.getLevel();
+    spectrum = fft.analyze();
+    waveform = fft.waveform();
+    volSense = volSenseSlider.value();
+    normVol = vol * volSense;
+    console.log(vol);
+>>>>>>> 0a5beb1c72417b484b0aac6dd3d3fa30e15d2de5
+
+    // Check if 30 seconds have passed
+    if (millis() - startTime >= 30000) {
+      console.log("30 seconds have passed");
+      showWormViz = !showWormViz;
+      // Reset the start time
+      startTime = millis();
     }
+<<<<<<< HEAD
+=======
+
+    //mouseHero();
+    //waveForm();
+    if (showWormViz) {
+      wormViz();
+      bodyviz(-globeScale * 2, globeScale * 3);
+      bodyviz(-globeScale * 2, -globeScale * 3);
+    } else {
+      mouseHero();
+    }
+  }
+>>>>>>> 0a5beb1c72417b484b0aac6dd3d3fa30e15d2de5
 }
 
 function mousePressed() {
+  getAudioContext().resume();
 
-    getAudioContext().resume();
+  if (!startAudio) {
+    mic = new p5.AudioIn();
+    fft = new p5.FFT(); // 1, 64
+    fft.setInput(mic);
 
+<<<<<<< HEAD
     if (!startAudio) {
         mic = new p5.AudioIn();
         fft = new p5.FFT(); // 1, 64
@@ -136,7 +227,12 @@ function mousePressed() {
         startAudio = true;
 
     }
+=======
+    mic.start();
+>>>>>>> 0a5beb1c72417b484b0aac6dd3d3fa30e15d2de5
 
+    startAudio = true;
+  }
 }
 
 /* function waveForm() {
@@ -154,46 +250,133 @@ function mousePressed() {
     }
 } */
 
-function wormViz() {
 
-    if (startAudio) {
-        let h = [172, 13, 260];
-        let s = [83, 92, 48];
-        let b = [44, 95, 36];
-        noStroke();
-        //beginShape();
-        //strokeWeight(globeScale * 0.1);
+function mouseHero() {
+  fft.analyze();
+  bassEnergy = fft.getEnergy("bass"); // Low frequency energy
+  freqThreshold = volSenseSlider.value(); // Set the threshold for bass energy
 
-        for (let i = 0; i < waveform.length; i++) {
-            if (round(i % 3) == 0) {
-                fill(h[1],s[1],b[1]);
-            }
-            if (round(i % 3) == 1) {
-                fill(h[2],s[2],b[2]);
-            }
-            if (round(i % 3) == 2) {
-                fill(h[3],s[3],b[3]);
-            }
-          // old code without lerp/ interpolation
-          //let x = map(i, 0, waveform.length, globeScale * 0.04, width);
-          //let y = map(waveform[i], -1, 1, 0, height);
+  // Check for a beat (if bass energy exceeds a threshold)
+  if (
+    bassEnergy > freqThreshold &&
+    millis() - lastBeatTime > beatInterval * 0.8
+  ) {
+    lastBeatTime = millis();
 
-          // Calculate the target positions
-          let targetX = map(i, 0, waveform.length, globeScale * 0.04, width);
-          let targetY = map(waveform[i], -1, 1, 0, height);
+    let topPos = 0 + 40;
+    let midPos = height / 2 - 40;
+    let bottomPos = height - 140;
+    let laserPos;
+    let newPosition = 0;
+    let prevPos = -1;
+    do {
+      newPosition = floor(random(3)); // Randomly choose 0 (top), 1 (middle), or 2 (bottom)
+    } while (newPosition === lastPosition); // Ensure it's not the same as the last position
+    prevPos = lastPosition;
+    lastPosition = newPosition;
 
-          // Interpolate the positions
-          let x = lerp(prevX[i] || targetX, targetX, 0.1);
-          let y = lerp(prevY[i] || targetY, targetY, 0.1);
+    laserPos = floor(random(2)); // if player in the middle random choose top/ bottom pos
 
-          // Store the current positions for the next frame
-          prevX[i] = x;
-          prevY[i] = y;
-          ellipse(x, y, globeScale * 0.1);
-        }
-        //endShape();
-
+    if (newPosition === 0) {
+      targetHeroY = topPos; // Top
+      laserTimer = 0;
+      if (prevPos !== 2) {
+        laserVisible = true;
+        laserY = midPos + 30;
+      }
+    } else if (newPosition === 1) {
+      targetHeroY = midPos; // Middle (centered vertically)
+      if (laserPos === 0) {
+        laserTimer = 0;
+        laserVisible = true;
+        laserY = topPos + 30;
+      } else if (laserPos === 1) {
+        laserTimer = 0;
+        laserVisible = true;
+        laserY = bottomPos + 30;
+      }
+    } else if (newPosition === 2) {
+      targetHeroY = bottomPos; // Bottom
+      laserTimer = 0;
+      if (prevPos !== 0) {
+        laserVisible = true;
+        laserY = midPos + 30;
+      }
     }
+
+    // Show the laser rectangle and reset the timer
+    laserTimer = millis();
+  }
+
+  stroke(0, 0, 0);
+  strokeWeight(15);
+  red = color(13, 92, 95);
+  yellow = color(52, 73, 88);
+  green = color(172, 83, 44);
+  black = color(152, 100, 6);
+  purple = color(260, 48, 36);
+  //fill(red)
+  //rect(0, 0, width / 6, height)
+  //rect(width / 6, 0 , width / 6, height)
+  //rect((width / 6) * 2, 0, width / 6, height)
+  //rect(width - width / 6, 0, width / 6, height)
+
+  let numSkyscrapers = 10; // Number of skyscrapers
+  let skyscraperWidth = width / numSkyscrapers; // Width of each skyscraper
+
+  for (let i = 0; i < numSkyscrapers; i++) {
+    let scaledWaveform = (waveform[i] * volSense) / 2; // Scale the waveform data by volSense
+    let targetHeight = map(scaledWaveform, -1, 1, height / 4, height); // More varied height based on waveform
+    let prevHeight = prevHeights[i] || targetHeight; // Use previous height or target height if not available
+    let skyscraperHeight = lerp(prevHeight, targetHeight, 0.05); // Interpolate the height
+
+    fill(colorOrder[i]); // Set the fill color
+    rect(
+      i * skyscraperWidth,
+      height - skyscraperHeight,
+      skyscraperWidth,
+      skyscraperHeight
+    );
+
+    prevHeights[i] = skyscraperHeight; // Store the current height for the next frame
+  }
+
+  // Cycle colors
+  /*  if (laserVisible) {
+        lastBeatTime = millis();
+        let firstColor = colorOrder.shift();
+        colorOrder.push(firstColor);
+    } */
+
+  /* fill(0, 0, 10);
+        rect(0, 0, width / 2, height / 3); // Top-left panel
+        rect(width / 2, 0, width / 2, height / 3); // Top-right panel
+
+        fill(0, 0, 20);
+        rect(0, height / 3, width / 3, height / 3); // Middle-left panel
+        rect(width / 3, height / 3, width / 3, height / 3); // Middle-center panel
+        rect(2 * width / 3, height / 3, width / 3, height / 3); // Middle-right panel
+
+        fill(0, 0, 30);
+        rect(0, 2 * height / 3, width / 2, height / 3); // Bottom-left panel
+        rect(width / 2, 2 * height / 3, width / 2, height / 3); // Bottom-right panel
+ */
+
+  // Smoothly interpolate the current y-position towards the target y-position
+  currentHeroY = lerp(currentHeroY, targetHeroY, 0.15);
+
+  strokeWeight(5);
+  fill(255); // Set fill color to white for the hero rectangle
+  //rect(width / 2.12, currentHeroY, 80, 80); // temp hero rectangle
+  image(tempMouseImage, width / 2.5, currentHeroY, 250, 100);
+
+  if (laserVisible) {
+    fill(13, 92, 95);
+    rect(0, laserY, width, 30); // laser rectangle
+  }
+  if (millis() - laserTimer > 50) {
+    laserVisible = false; // Hide the laser rectangle after
+  }
 }
 
 function mouseHero(){
@@ -320,25 +503,26 @@ function mouseHero(){
     }
 
 //Chisara spectrum
-function spectrumF(){
-    if(startAudio){
-        for(let i = 0; i < spectrum.length; i++){
+function spectrumF() {
+  if (startAudio) {
+    for (let i = 0; i < spectrum.length; i++) {
+      let rectX = map(i, 0, spectrum.length, 0, width);
+      let rectY = height;
+      let rectW = globeScale * 0.05;
+      let rectH = -map(spectrum[i], 0, 255, 0, height);
 
-            let rectX = map(i, 0, spectrum.length, 0, width);
-            let rectY = height;
-            let rectW = globeScale * 0.05;
-            let rectH = -map(spectrum[i], 0, 255, 0, height);
+      noStroke();
+      fill(spectrum[i], 100, 100, 0.1);
+      rect(rectX, rectY, rectW, rectH);
 
-            noStroke();
-            fill(spectrum[i], 100, 100, 0.1);
-            rect(rectX, rectY, rectW, rectH);
-
-            let rectX2 = width - rectX - rectW;
-            rect(rectX2, rectY, rectW, rectH);
-
-        }
+      let rectX2 = width - rectX - rectW;
+      rect(rectX2, rectY, rectW, rectH);
     }
+<<<<<<< HEAD
 
+=======
+  }
+>>>>>>> 0a5beb1c72417b484b0aac6dd3d3fa30e15d2de5
 }
 
 //lerp color for worm line
