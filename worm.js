@@ -3,6 +3,33 @@ let antennaAngle = 0;
 
 function wormViz() {
   if (startAudio) {
+    stroke(0, 0, 0);
+    strokeWeight(15);
+    red = color(13, 92, 95, 50);
+    yellow = color(52, 73, 88);
+    green = color(172, 83, 44);
+    black = color(152, 100, 6);
+    purple = color(260, 48, 36);
+  
+    let numSkyscrapers = 10; // Number of skyscrapers
+    let skyscraperWidth = width / numSkyscrapers; // Width of each skyscraper
+  
+    for (let i = 0; i < numSkyscrapers; i++) {
+      let scaledWaveform = (waveform[i] * volSense) / 4; // Scale the waveform data by volSense
+      let targetHeight = map(scaledWaveform, -1, 1, 0, height); // Adjust height mapping to ensure skyscrapers reach the bottom
+      let prevHeight = prevHeights[i] || targetHeight; // Use previous height or target height if not available
+      let skyscraperHeight = lerp(prevHeight, targetHeight, 0.1); // Interpolate the height
+  
+      fill(colorOrder[i % colorOrder.length]); // Set the fill color
+      rect(
+        i * skyscraperWidth,
+        height - skyscraperHeight,
+        skyscraperWidth,
+        skyscraperHeight
+      );
+  
+      prevHeights[i] = skyscraperHeight; // Store the current height for the next frame
+  }
     let h = [172, 13, 260];
     let s = [83, 92, 48];
     let b = [44, 95, 36];
@@ -105,4 +132,3 @@ function bodyviz(xOffset, yOffset) { // Add xOffset and yOffset as parameters
         }
     }
 }
-
