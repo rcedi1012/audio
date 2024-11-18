@@ -92,7 +92,7 @@ function setup() {
   fft.setInput(mic);
 
   volSenseSlider = createSlider(0, 200, volSense, sliderStep);
-  volSenseSlider.position(10, 10); // Position the slider in the top-left corner
+  volSenseSlider.id('volSenseSlider');
 
   // Initialize prevHeights array with zeros
   for (let i = 0; i < 10; i++) {
