@@ -140,15 +140,11 @@ function draw() {
       startTime = millis();
     }
 
-    //mouseHero();
-    //waveForm();
+    bodyviz(-globeScale * 2, -globeScale * 3);
+    bodyviz(-globeScale * 2, globeScale * 3);
      if (showWormViz) {
       wormViz();
-      bodyviz(-globeScale * 2, globeScale * 3);
-      bodyviz(-globeScale * 2, -globeScale * 3);
     } else {
-      bodyviz(-globeScale * 2, -globeScale * 3);
-      bodyviz(-globeScale * 2, globeScale * 3);
       mouseHero();
     }
   }
