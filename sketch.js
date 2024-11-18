@@ -59,6 +59,10 @@ let tempMouseImage;
 let Mouse1, Mouse2, Mouse3, Laser;
 let antenna, f1, f2, f3, f4, f5, head;
 let sf1, sf2, sf3, sf4, sf5;
+let c1, c2, c3;
+
+let myCloud;
+let myCloud2;
 
 function preload() {
   //tempMouseImage = loadImage("TempMouse.png");
@@ -73,7 +77,9 @@ function preload() {
   f4 = loadImage("F4.png");
   f5 = loadImage("F5.png");
   head = loadImage("Head.png");
-
+  c1 = loadImage("Cloud 1.png");
+  c2 = loadImage("Cloud 2.png");
+  c3 = loadImage("Cloud 3.png");
 }
 
 function setup() {
@@ -120,6 +126,8 @@ function setup() {
 
   lastImageChangeTimeMouse = millis(); // Reset the last image change time
 
+  myCloud = new Cloud(random(window.innerWidth * 0.4, window.innerWidth * 0.1), globeScale * 0.1);
+  myCloud2 = new Cloud((window.innerWidth * 0), globeScale * 0.0001)
 }
 
 function draw() {
@@ -139,6 +147,11 @@ function draw() {
       // Reset the start time
       startTime = millis();
     }
+    myCloud.moveX();
+    myCloud.display();
+    
+    myCloud2.moveX();
+    myCloud2.display();
 
     bodyviz(-globeScale * 2, -globeScale * 3);
     bodyviz(-globeScale * 2, globeScale * 3);
@@ -324,6 +337,8 @@ function spectrumF() {
     }
   }
 }
+
+
 
 //lerp color for worm line
 // or circles

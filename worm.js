@@ -135,3 +135,34 @@ function bodyviz(xOffset, yOffset) { // Add xOffset and yOffset as parameters
         }
     }
 }
+
+class Cloud {
+  constructor(startX, startY) {
+    this.x = startX;
+    this.y = startY;
+  }
+
+  moveX() {
+    this.x += window.innerWidth * 0.001;
+    if (this.x > width + width * 0.3) {
+      this.x = - width * 0.5;
+    }
+  }
+
+  // JH I changed this from 'drawBall' to 'display', 
+  // which is a bit more generic a name, and used more 
+  // often in these types of cases. You can name things what
+  // you want, but it's good to be clear and consistent
+  display() {
+    
+    //JH Why not do all the heavy lifting for what a 'cloud' 
+    //is here, in this function? Instead of making three 
+    // different object to make up a cloud, you could have 
+    //one object that represents the whole cloud. For instance:
+    
+    //Offset each ellipse a bit here, so the whole cloud moves as a body
+    image(c1, this.x, this.y);
+
+  }
+
+}
