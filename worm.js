@@ -87,9 +87,10 @@ function wormViz() {
 }
 
 function antennaMove() {
+
     push();
     drawingContext.shadowColor = color(13, 92, 95);
-    drawingContext.shadowBlur = 12;
+    drawingContext.shadowBlur = 20;
     translate(globeScale * 0.12, globeScale * 0.44); // Center rotation on antenna position
     
     // Map the waveform to an angle range
