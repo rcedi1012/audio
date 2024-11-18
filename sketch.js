@@ -100,11 +100,11 @@ function setup() {
   }
   // Initialize colors
   colors = [
-    //color(13, 92, 95),   // red
-    color(52, 73, 88), // yellow
-    color(172, 83, 44), // green
+    color(13, 45, 95),   // red 92
+    color(52, 40, 88), // yellow 73
+    color(172, 45, 44), // green 83
     //color(152, 100, 6),  // black
-    color(260, 48, 36), // purple
+    color(260, 28, 36), // purple 48
   ];
 
   // Initialize color order
@@ -148,7 +148,7 @@ function draw() {
       bodyviz(-globeScale * 2, -globeScale * 3);
     } else {
       mouseHero();
-    } 
+    }
   }
 }
 
@@ -187,9 +187,9 @@ function mouseHero() {
   bassEnergy = fft.getEnergy("bass"); // Low frequency energy
   freqThreshold = volSenseSlider.value(); // Set the threshold for bass energy
   let newPosition = 0;
-  let topPos = 0 + 40;
-  let midPos = height / 2;
-  let bottomPos = height -  50;
+  let topPos = height * 0.01;
+  let midPos = height * 0.5;
+  let bottomPos = height * 0.9;
   /* image(Laser, 0, bottomPos + 20, width, 50);
   image(Laser, 0, midPos, width, 50);
   image(Laser, 0, topPos - 20, width, 50); */
@@ -224,11 +224,11 @@ function mouseHero() {
       if (laserPos === 0) {
         laserTimer = 0;
         laserVisible = true;
-        laserY = topPos - 20; // + 30
+        laserY = topPos; //- 20; // + 30
       } else if (laserPos === 1) {
         laserTimer = 0;
         laserVisible = true;
-        laserY = bottomPos + 20; // + 30
+        laserY = bottomPos; //+ 20; // + 30
       }
     } else if (newPosition === 2) {
       targetHeroY = bottomPos; // Bottom
@@ -256,10 +256,10 @@ function mouseHero() {
   let skyscraperWidth = width / numSkyscrapers; // Width of each skyscraper
 
   for (let i = 0; i < numSkyscrapers; i++) {
-    let scaledWaveform = (waveform[i] * volSense) / 4; // Scale the waveform data by volSense
+    let scaledWaveform = (waveform[i] * volSense); // Scale the waveform data by volSense
     let targetHeight = map(scaledWaveform, -1, 1, 0, height); // Adjust height mapping to ensure skyscrapers reach the bottom
     let prevHeight = prevHeights[i] || targetHeight; // Use previous height or target height if not available
-    let skyscraperHeight = lerp(prevHeight, targetHeight, 0.1); // Interpolate the height
+    let skyscraperHeight = lerp(prevHeight, targetHeight, 0.05); // Interpolate the height
 
     fill(colorOrder[i % colorOrder.length]); // Set the fill color
     rect(
@@ -281,7 +281,7 @@ function mouseHero() {
 
   if (laserVisible) {
     fill(13, 92, 95);
-    image(Laser, 0, laserY, width, 50);
+    image(Laser, 0, laserY, width, 65);
     //rect(0, laserY, width, 30); // laser rectangle
   }
   if (millis() - laserTimer > 50) {
