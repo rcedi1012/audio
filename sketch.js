@@ -153,11 +153,13 @@ function draw() {
     myCloud2.moveX();
     myCloud2.display();
 
-    bodyviz(-globeScale * 2, -globeScale * 3);
-    bodyviz(-globeScale * 2, globeScale * 3);
      if (showWormViz) {
+      bodyviz(-globeScale * 2, -globeScale * 3);
+      bodyviz(-globeScale * 2, globeScale * 3);
       wormViz();
     } else {
+      bodyviz(-globeScale * 2, -globeScale * 3);
+      bodyviz(-globeScale * 2, globeScale * 3);
       mouseHero();
     }
   }

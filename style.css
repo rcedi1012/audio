@@ -46,3 +46,7 @@
     border-radius: 50%; /* Make it a circle */
     cursor: pointer; /* Cursor on hover */
   }
+
+body {
+  overflow: hidden; /* Prevent scrollbars */
+}
